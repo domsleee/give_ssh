@@ -1,0 +1,23 @@
+#!/bin/bash -e
+set -e # crash on error
+DIR="give_ssh/"
+
+function main {
+    class=$1
+    assignment=$2
+    files=${@:3}
+    ssh -t $cse "rm -rf $DIR && mkdir $DIR"
+    scp $files "$cse:$DIR"
+    echo "give $class $assignment $files"
+    ssh -t $cse "cd $DIR && give $class $assignment $files"
+}
+
+if [ -z "$cse" ]; then
+    echo "\$cse variable needs to be set to your ssh address."
+    echo "add \"export cse=zXXXXXXX@cse.unsw.edu.au\" to your ~/.bashrc"
+    exit 1
+elif [[ $# < 3 ]]; then
+    echo "Ex: give_ssh cs6741 a1 a1_sol.pdf"
+    exit 1
+fi
+main $@
