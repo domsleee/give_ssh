@@ -6,5 +6,5 @@ Submit your files through UNSW give over ssh.
 
 The interface is identical to that of give:
 ~~~sh
-ssh_give class assignment [files...]
+give_ssh class assignment [files...]
 ~~~
