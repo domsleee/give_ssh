@@ -1,6 +1,7 @@
 #!/bin/bash -e
 set -e # crash on error
 DIR="give_ssh/"
+EX="Ex: give_ssh cs6741 a1 a1_sol.pdf"
 
 function main {
     class=$1
@@ -12,12 +13,16 @@ function main {
     ssh -t $cse "cd $DIR && give $class $assignment $files"
 }
 
-if [ -z "$cse" ]; then
+function no_cse_env {
     echo "\$cse variable needs to be set to your ssh address."
     echo "add \"export cse=zXXXXXXX@cse.unsw.edu.au\" to your ~/.bashrc"
+}
+
+if [ -z "$cse" ]; then
+    no_cse_env
     exit 1
 elif [[ $# < 3 ]]; then
-    echo "Ex: give_ssh cs6741 a1 a1_sol.pdf"
+    echo $EX
     exit 1
 fi
 main $@
