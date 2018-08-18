@@ -2,6 +2,7 @@
 set -e # crash on error
 DIR=".give_ssh/"
 EX="Ex: give_ssh cs6741 a1 \"a1/a1 sol.pdf\""
+LOC_DIR="/tmp/$DIR"
 
 function main {
     class=$1
@@ -9,10 +10,21 @@ function main {
     files=("${@:3}")
     l_files=("${files[@]/*\//}")
     l_files=("${l_files[@]/ /\\ }")
-    ssh -t $cse "rm -rf $DIR && mkdir $DIR"
-    scp "${files[@]}" "$cse:$DIR"
+    copy_to_local_dir "${files[@]}"
+    scp -r "$LOC_DIR" $cse:
     echo "give $class $assignment ${l_files[@]}"
     ssh -t $cse "cd $DIR && give $class $assignment ${l_files[@]}"
+}
+
+function copy_to_local_dir {
+    files=("$@")
+    if [[ ${#DIR} > 1 ]] && [[ "${DIR: -1}" == "/" ]]; then
+        rm -rf "$LOC_DIR"; mkdir "$LOC_DIR"
+        cp "${files[@]}" "$LOC_DIR"
+    else
+        echo "Check \$DIR"
+        exit 1
+    fi
 }
 
 function no_cse_env {
