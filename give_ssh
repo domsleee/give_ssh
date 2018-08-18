@@ -1,16 +1,18 @@
 #!/bin/bash -e
 set -e # crash on error
-DIR="give_ssh/"
-EX="Ex: give_ssh cs6741 a1 a1_sol.pdf"
+DIR=".give_ssh/"
+EX="Ex: give_ssh cs6741 a1 \"a1/a1 sol.pdf\""
 
 function main {
     class=$1
     assignment=$2
-    files=${@:3}
+    files=("${@:3}")
+    l_files=("${files[@]/*\//}")
+    l_files=("${l_files[@]/ /\\ }")
     ssh -t $cse "rm -rf $DIR && mkdir $DIR"
-    scp $files "$cse:$DIR"
-    echo "give $class $assignment $files"
-    ssh -t $cse "cd $DIR && give $class $assignment $files"
+    scp "${files[@]}" "$cse:$DIR"
+    echo "give $class $assignment ${l_files[@]}"
+    ssh -t $cse "cd $DIR && give $class $assignment ${l_files[@]}"
 }
 
 function no_cse_env {
@@ -25,4 +27,5 @@ elif [[ $# < 3 ]]; then
     echo $EX
     exit 1
 fi
-main $@
+
+main "$@"
