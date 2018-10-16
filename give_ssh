@@ -11,9 +11,9 @@ function main {
     l_files=("${files[@]/*\//}")
     l_files=("${l_files[@]/ /\\ }")
     copy_to_local_dir "${files[@]}"
-    scp -r "$LOC_DIR" $cse:
+    scp -r "$LOC_DIR" cse:
     echo "give $class $assignment ${l_files[@]}"
-    ssh -t $cse "cd $DIR && give $class $assignment ${l_files[@]}"
+    ssh -t cse "cd $DIR && give $class $assignment ${l_files[@]}"
 }
 
 function copy_to_local_dir {
@@ -27,15 +27,7 @@ function copy_to_local_dir {
     fi
 }
 
-function no_cse_env {
-    echo "\$cse variable needs to be set to your ssh address."
-    echo "add \"export cse=zXXXXXXX@cse.unsw.edu.au\" to your ~/.bashrc"
-}
-
-if [ -z "$cse" ]; then
-    no_cse_env
-    exit 1
-elif [[ $# < 3 ]]; then
+if [[ $# < 3 ]]; then
     echo $EX
     exit 1
 fi
